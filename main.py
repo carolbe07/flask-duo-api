@@ -28,11 +28,11 @@ def duo():
         # Neues Bild: 2700 x 1024
         result = Image.new("RGBA", (2700, 1024), (255, 255, 255, 255))
 
-        # Erstes Bild bei 100 px
-        result.paste(original, (100, 0))
-
-        # Zweites Bild bei 100 + 1024 + 452 = 1576 px
-        result.paste(original, (100 + 1024 + 452, 0))
+        # Berechnete Positionen:
+        first_image_position = 100
+        second_image_position = first_image_position + 1024 + 452  # 100px + 1024px (erstes Bild) + 452px Abstand
+        result.paste(original, (first_image_position, 0))  # Erstes Bild bei 100px
+        result.paste(original, (second_image_position, 0))  # Zweites Bild bei 1576px
 
         # Bild zurückgeben
         output = BytesIO()

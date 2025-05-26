@@ -2,5 +2,6 @@ services:
   - type: web
     name: flask-duo-api
     env: python
-    buildCommand: ""
+    buildCommand: "pip install -r requirements.txt"
     startCommand: "python main.py"
+    rootDir: .

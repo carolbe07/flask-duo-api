@@ -16,25 +16,28 @@ def duo():
         return "❌ Parameter 'image' fehlt", 400
     try:
         # Bild laden
-        response = requests.get(image_url)
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(image_url, headers=headers)
+
+        if response.status_code != 200:
+            return f"❌ Fehler beim Laden des Bildes: Status {response.status_code}", 400
+
         original = Image.open(BytesIO(response.content)).convert("RGBA")
+        original = original.resize((1024, 1024))  # falls nötig
 
-        # Zielgröße der Einzelbilder prüfen/anpassen (falls nicht 1024x1024)
-        original = original.resize((1024, 1024))
-
-        # Neues leeres Bild (2700x1024)
+        # Neues Bild: 2700 x 1024
         result = Image.new("RGBA", (2700, 1024), (255, 255, 255, 255))
 
-        # Erstes Bild bei x = 100
+        # Erstes Bild bei 100 px
         result.paste(original, (100, 0))
 
-        # Zweites Bild bei x = 1576 (100 + 1024 + 452)
+        # Zweites Bild bei 1576 px (100 + 1024 + 452)
         result.paste(original, (1576, 0))
 
-        # Ausgabe vorbereiten
+        # Bild zurückgeben
         output = BytesIO()
         result.save(output, format="PNG")
         output.seek(0)
         return send_file(output, mimetype="image/png")
     except Exception as e:
-        return f"Fehler: {str(e)}", 500
+        return f"❌ Bild konnte nicht verarbeitet werden: {str(e)}", 500

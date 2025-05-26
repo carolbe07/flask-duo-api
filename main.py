@@ -15,12 +15,23 @@ def duo():
     if not image_url:
         return "❌ Parameter 'image' fehlt", 400
     try:
+        # Bild laden
         response = requests.get(image_url)
         original = Image.open(BytesIO(response.content)).convert("RGBA")
-        width, height = original.size
-        result = Image.new("RGBA", (width * 2 + 200, height), (255, 255, 255, 0))
-        result.paste(original, (0, 0))
-        result.paste(original, (width + 200, 0))
+
+        # Zielgröße der Einzelbilder prüfen/anpassen (falls nicht 1024x1024)
+        original = original.resize((1024, 1024))
+
+        # Neues leeres Bild (2700x1024)
+        result = Image.new("RGBA", (2700, 1024), (255, 255, 255, 255))
+
+        # Erstes Bild bei x = 100
+        result.paste(original, (100, 0))
+
+        # Zweites Bild bei x = 1576 (100 + 1024 + 452)
+        result.paste(original, (1576, 0))
+
+        # Ausgabe vorbereiten
         output = BytesIO()
         result.save(output, format="PNG")
         output.seek(0)

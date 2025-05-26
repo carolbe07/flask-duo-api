@@ -15,43 +15,29 @@ def duo():
     if not image_url:
         return "❌ Parameter 'image' fehlt", 400
     try:
-        # Lade das Hauptbild
         headers = {"User-Agent": "Mozilla/5.0"}
         response = requests.get(image_url, headers=headers)
-
         if response.status_code != 200:
             return f"❌ Fehler beim Laden des Bildes: Status {response.status_code}", 400
 
-        # Lade das Bild und mache es 1024x1024
         original = Image.open(BytesIO(response.content)).convert("RGBA")
-        original = original.resize((1024, 1024))  # Bildgröße sicherstellen
+        original = original.resize((1024, 1024))
 
-        # Lade die Abstands-Bilder
-        transparent_100px = Image.open(BytesIO(requests.get("https://res.cloudinary.com/dp83ggvwp/image/upload/v1748257122/100x1024_nlzwnc.png").content))
-        transparent_452px = Image.open(BytesIO(requests.get("https://res.cloudinary.com/dp83ggvwp/image/upload/v1748257121/452x1024_bfpu1w.png").content))
+        # Obliczenie całkowitej szerokości
+        canvas_width = 100 + 1024 + 452 + 1024 + 100
+        canvas_height = 1024
 
-        # Neues Bild erstellen (2700 x 1024)
-        result = Image.new("RGBA", (2700, 1024), (255, 255, 255, 255))
+        # Stworzenie pustego obrazu
+        result = Image.new("RGBA", (canvas_width, canvas_height), (255, 255, 255, 255))
 
-        # Erstes Bild bei 100px
-        result.paste(original, (100, 0))
+        # Wklejanie obrazów
+        x1 = 100
+        x2 = x1 + 1024 + 452
 
-        # Füge das 100px Abstandbild ein
-        result.paste(transparent_100px, (100 + 1024, 0))
+        result.paste(original, (x1, 0))
+        result.paste(original, (x2, 0))
 
-        # Füge das zweite Bild nach dem ersten Abstand ein
-        result.paste(original, (100 + 1024 + 100, 0))
-
-        # Füge das 452px Abstandbild ein
-        result.paste(transparent_452px, (100 + 1024 + 100 + 1024, 0))
-
-        # Füge das zweite Bild nach dem zweiten Abstand ein
-        result.paste(original, (100 + 1024 + 100 + 1024 + 452, 0))
-
-        # Füge den 100px Abstand nach dem zweiten Bild ein
-        result.paste(transparent_100px, (100 + 1024 + 100 + 1024 + 452 + 1024, 0))
-
-        # Bild zurückgeben
+        # Zwrócenie obrazu
         output = BytesIO()
         result.save(output, format="PNG")
         output.seek(0)

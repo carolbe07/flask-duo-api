@@ -23,7 +23,7 @@ def duo():
             return f"❌ Fehler beim Laden des Bildes: Status {response.status_code}", 400
 
         original = Image.open(BytesIO(response.content)).convert("RGBA")
-        original = original.resize((1024, 1024))  # falls nötig
+        original = original.resize((1024, 1024))  # Bildgröße sicherstellen
 
         # Neues Bild: 2700 x 1024
         result = Image.new("RGBA", (2700, 1024), (255, 255, 255, 255))
@@ -31,8 +31,8 @@ def duo():
         # Erstes Bild bei 100 px
         result.paste(original, (100, 0))
 
-        # Zweites Bild bei 1576 px (100 + 1024 + 452)
-        result.paste(original, (2028, 0))
+        # Zweites Bild bei 1124 px (100px Rand + 1024px Bildbreite)
+        result.paste(original, (100 + 1024 + 100, 0))
 
         # Bild zurückgeben
         output = BytesIO()

@@ -31,14 +31,8 @@ def duo():
         # Erstes Bild bei 100 px
         result.paste(original, (100, 0))
 
-        # Schwarzes Bild mit 452px Abstand erstellen
-        black_space = Image.new("RGBA", (452, 1024), (0, 0, 0, 255))  # Schwarzes Bild
-
-        # Schwarzes Bild einfügen
-        result.paste(black_space, (1124, 0))  # Schwarzes Bild nach dem ersten Bild
-
-        # Zweites Bild bei 1576 px (100 + 1024 + 452)
-        result.paste(original, (1576, 0))
+        # Zweites Bild bei 100 + 1024 + 452 = 1576 px
+        result.paste(original, (100 + 1024 + 452, 0))
 
         # Bild zurückgeben
         output = BytesIO()

@@ -32,7 +32,7 @@ def duo():
         result.paste(original, (100, 0))
 
         # Zweites Bild bei 1576 px (100 + 1024 + 452)
-        result.paste(original, (1576, 0))
+        result.paste(original, (2028, 0))
 
         # Bild zurückgeben
         output = BytesIO()

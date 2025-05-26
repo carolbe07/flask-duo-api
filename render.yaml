@@ -1,7 +1,10 @@
 services:
   - type: web
-    name: flask-duo-api
+    name: flask-duo
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python main.py"
-    rootDir: .
+    plan: free
+    buildCommand: ""
+    startCommand: python duo.py
+    envVars:
+      - key: PORT
+        value: 10000
